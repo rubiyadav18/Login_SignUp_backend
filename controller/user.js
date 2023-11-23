@@ -43,7 +43,7 @@ const resgistration = async (req, res) => {
             Dinner
         } = req.body;
 
-        // Validate input
+        // Validate All Fields
         if (!firstName || !lastName || !password || !mail || !phoneNumber || !gender || !weight || !occupaction || !BMI || !age || !height || !medical_condition || !food_habit || !food_allig || !meal_a_day || !Breackfast || !Lunch || !snacks || !Dinner) {
             return res.status(400).json({ error: 'All fields are required' });
         }
@@ -52,7 +52,7 @@ const resgistration = async (req, res) => {
             return res.status(400).json({ error: 'Password must be at least 6 characters long' });
         }
 
-        // Check if the email is already in use
+        // Check if the email is already in use this mail 
         const existingUser = await db.User.findOne({
             where: {
                 mail: {
@@ -65,10 +65,10 @@ const resgistration = async (req, res) => {
             return res.status(400).json({ error: 'Email is already in use' });
         }
 
-        // Hash the password
+        //  cheaking Hash the password here 
         const hashedPassword = await bcrypt.hash(password, 10); 
 
-        // Create a new user with hashed password and JSON data
+        // Create a new user with hashed password
         const newUser = await db.User.create({
             firstName,
             lastName,
@@ -119,7 +119,7 @@ const Login = async (req, res) => {
             return res.status(401).json({ error: 'User Not found' });
         }
 
-        // Compare hashed password
+        // Compare hashed password here 
         console.log(password, user.password, "isPasswordValid");
         const isPasswordValid = await bcrypt.compare(String(password), String(user.password));
 
@@ -128,7 +128,7 @@ const Login = async (req, res) => {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        // Generate a JWT token
+        // Generate a JWT token here 
         const token = jwt.sign({ userId: user.id }, 'your_secret_key', { expiresIn: '1h' });
 
         // Successful login
@@ -173,7 +173,7 @@ const updateUser = async (req, res) => {
     }
 }
 
-
+//sendotp apis
 const sendotp = async (req, res) => {
     try {
         const { mail, phoneNumber } = req.body;
@@ -203,8 +203,7 @@ const sendotp = async (req, res) => {
     }
 };
 
-
-
+//verifyotp APIS
 const verifyotp = async (req, res) => {
     try {
         const { mail, phoneNumber, otp } = req.body;
